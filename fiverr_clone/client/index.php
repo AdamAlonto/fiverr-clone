@@ -4,7 +4,7 @@ if (!$userObj->isLoggedIn()) {
   header("Location: login.php");
 }
 
-if (!$userObj->isAdmin()) {
+if (!$userObj->isClient()) {
   header("Location: ../freelancer/index.php");
 } 
 ?>
@@ -55,6 +55,7 @@ if (!$userObj->isAdmin()) {
                 <div class="col-md-6">
                   <h2><a href="other_profile_view.php?user_id=<?php echo $proposal['user_id'] ?>"><?php echo $proposal['username']; ?></a></h2>
                   <img src="<?php echo '../images/'.$proposal['image']; ?>" class="img-fluid" alt="">
+                  <p><b><?php echo $proposal['category_name']; ?></b> > <b><?php echo $proposal['subcategory_name']; ?></b></p>
                   <p class="mt-4 mb-4"><?php echo $proposal['description']; ?></p>
                   <h4><i><?php echo number_format($proposal['min_price']) . " - " . number_format($proposal['max_price']);?> PHP</i></h4>
                 </div>

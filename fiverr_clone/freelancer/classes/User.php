@@ -1,6 +1,6 @@
 <?php  
 
-require_once 'Database.php';
+require_once __DIR__ . '/Database.php';
 /**
  * Class for handling User-related operations.
  * Inherits CRUD methods from the Database class.
@@ -41,13 +41,15 @@ class User extends Database {
      * @param bool $is_admin Whether the user is an admin.
      * @return bool True on success, false on failure.
      */
-    public function registerUser($username, $email, $password, $contact_number, $is_client = 0) {
+    public function registerUser($username, $email, $password, $contact_number, $is_client = 0, $role = 'client') {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO fiverr_clone_users (username, email, password, is_client, contact_number) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO fiverr_clone_users (username, email, password, is_client, contact_number, role) VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            $this->executeNonQuery($sql, [$username, $email, $hashed_password, $is_client, $contact_number]);
+            $this->executeNonQuery($sql, [$username, $email, $hashed_password, $is_client, $contact_number, $role]);
             return true;
         } catch (\PDOException $e) {
+            $_SESSION['message'] = $e->getMessage();
+            $_SESSION['status'] = '400';
             return false;
         }
     }
@@ -58,15 +60,19 @@ class User extends Database {
      * @param string $password The user's password.
      * @return bool True on success, false on failure.
      */
-    public function loginUser($email, $password) {
-        $sql = "SELECT user_id, username, password, is_client FROM fiverr_clone_users WHERE email = ?";
+    public function loginUser($email, $password, $role = null) {
+        $sql = "SELECT user_id, username, password, is_client, role FROM fiverr_clone_users WHERE email = ?";
         $user = $this->executeQuerySingle($sql, [$email]);
 
         if ($user && password_verify($password, $user['password'])) {
+            if ($role && $user['role'] !== $role) {
+                return false;
+            }
             $this->startSession();
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['is_client'] = (bool)$user['is_client'];
+            $_SESSION['role'] = $user['role'];
             return true;
         }
         return false;
@@ -87,7 +93,22 @@ class User extends Database {
      */
     public function isAdmin() {
         $this->startSession();
-        return isset($_SESSION['is_client']) && $_SESSION['is_client'];
+        return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+    }
+
+    public function isClient() {
+        $this->startSession();
+        return isset($_SESSION['role']) && $_SESSION['role'] === 'client';
+    }
+
+    public function isFreelancer() {
+        $this->startSession();
+        return isset($_SESSION['role']) && $_SESSION['role'] === 'freelancer';
+    }
+
+    public function getRole() {
+        $this->startSession();
+        return isset($_SESSION['role']) ? $_SESSION['role'] : null;
     }
 
     /**

@@ -4,7 +4,7 @@
  * Uses PDO for secure database interactions.
  */
 class Database {
-    protected $pdo;
+    public $pdo;
     private $host = 'localhost';
     private $db = 'fiverr';
     private $user = 'root';
@@ -35,7 +35,7 @@ class Database {
      * @param array $params The parameters to bind to the query.
      * @return array The fetched data.
      */
-    protected function executeQuery($sql, $params = []) {
+    public function executeQuery($sql, $params = []) {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
@@ -47,7 +47,7 @@ class Database {
      * @param array $params The parameters to bind to the query.
      * @return array|null The single fetched row, or null if not found.
      */
-    protected function executeQuerySingle($sql, $params = []) {
+    public function executeQuerySingle($sql, $params = []) {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetch();
@@ -59,7 +59,7 @@ class Database {
      * @param array $params The parameters to bind to the query.
      * @return int The number of affected rows.
      */
-    protected function executeNonQuery($sql, $params = []) {
+    public function executeNonQuery($sql, $params = []) {
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($params);
     }
@@ -68,7 +68,7 @@ class Database {
      * Returns the ID of the last inserted row.
      * @return string
      */
-    protected function lastInsertId() {
+    public function lastInsertId() {
         return $this->pdo->lastInsertId();
     }
 }

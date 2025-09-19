@@ -57,6 +57,7 @@
               <label for="exampleInputEmail1">Confirm Password</label>
               <input type="password" class="form-control" name="confirm_password" required>
               <input type="submit" class="btn btn-primary float-right mt-4" name="insertNewUserBtn">
+              <p> <button onclick="history.back()">Go Back</button></p>
             </div>
           </div>
         </form>

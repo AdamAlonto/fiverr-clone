@@ -1,4 +1,4 @@
-<?php require_once 'classloader.php'; ?>
+<?php require_once 'E:/xampp/htdocs/fiverr_clone/administrator/classloader.php'; ?>
 
 <html lang="en">
 <head>
@@ -15,7 +15,7 @@
         background-image: url("https://img.freepik.com/free-vector/winter-blue-pink-gradient-background-vector_53876-117275.jpg?t=st=1746104039~exp=1746107639~hmac=2f238261c795cf2f54851b4f9f1b1bda806f8a408384522f6de69dcd5115750f&w=1380");
       }
   </style>
-  <title>Hello, world!</title>
+  <title>Administrator Registration</title>
 </head>
 <body>
   <div class="container">
@@ -23,7 +23,7 @@
       <div class="col-md-8 p-5">
         <div class="card shadow">
           <div class="card-header">
-            <h2>Welcome to the freelancer panel, Register Now as freelancer!</h2>
+            <h2>Welcome to the administrator panel, Register Now as administrator!</h2>
           </div>
           <form action="core/handleForms.php" method="POST">
             <div class="card-body">
@@ -42,6 +42,8 @@
                 unset($_SESSION['message']);
                 unset($_SESSION['status']);
                 ?>
+              <input type="hidden" name="form_type" value="register_admin">
+              <input type="hidden" name="role" value="admin">
               <div class="form-group">
                 <label for="exampleInputEmail1">Username</label>
                 <input type="text" class="form-control" name="username" required>

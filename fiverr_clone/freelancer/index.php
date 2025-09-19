@@ -4,9 +4,11 @@ if (!$userObj->isLoggedIn()) {
   header("Location: login.php");
 }
 
-if ($userObj->isAdmin()) {
+if (!$userObj->isFreelancer()) {
   header("Location: ../client/index.php");
 } 
+
+$categories = $categoryObj->getCategories();
 ?>
 <!doctype html>
   <html lang="en">
@@ -51,6 +53,21 @@ if ($userObj->isAdmin()) {
                   ?>
                   <h1 class="mb-4 mt-4">Add Proposal Here!</h1>
                   <div class="form-group">
+                    <label for="category_id">Category</label>
+                    <select class="form-control" id="category_id" name="category_id" required>
+                        <option value="">Select Category</option>
+                        <?php foreach ($categories as $category) { ?>
+                            <option value="<?php echo $category['category_id']; ?>"><?php echo $category['category_name']; ?></option>
+                        <?php } ?>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="subcategory_id">Subcategory</label>
+                    <select class="form-control" id="subcategory_id" name="subcategory_id" required>
+                        <option value="">Select Subcategory</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
                     <label for="exampleInputEmail1">Description</label>
                     <input type="text" class="form-control" name="description" required>
                   </div>
@@ -80,6 +97,7 @@ if ($userObj->isAdmin()) {
               <h2><a href="other_profile_view.php?user_id=<?php echo $proposal['user_id']; ?>"><?php echo $proposal['username']; ?></a></h2>
               <img src="<?php echo '../images/' . $proposal['image']; ?>" alt="">
               <p class="mt-4"><i><?php echo $proposal['proposals_date_added']; ?></i></p>
+              <p><b><?php echo $proposal['category_name']; ?></b> > <b><?php echo $proposal['subcategory_name']; ?></b></p>
               <p class="mt-2"><?php echo $proposal['description']; ?></p>
               <h4><i><?php echo number_format($proposal['min_price']) . " - " . number_format($proposal['max_price']); ?> PHP</i></h4>
               <div class="float-right">
@@ -91,5 +109,24 @@ if ($userObj->isAdmin()) {
         </div>
       </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            $('#category_id').on('change', function(){
+                var category_id = $(this).val();
+                if(category_id){
+                    $.ajax({
+                        type:'POST',
+                        url:'ajax.php',
+                        data:'category_id='+category_id,
+                        success:function(html){
+                            $('#subcategory_id').html(html);
+                        }
+                    }); 
+                }else{
+                    $('#subcategory_id').html('<option value="">Select category first</option>');
+                }
+            });
+        });
+    </script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 <?php  
-require_once '../classloader.php';
+require_once 'E:/xampp/htdocs/fiverr_clone/client/classloader.php';
 
 if (isset($_POST['insertNewUserBtn'])) {
 	$username = htmlspecialchars(trim($_POST['username']));
@@ -14,7 +14,7 @@ if (isset($_POST['insertNewUserBtn'])) {
 
 			if (!$userObj->usernameExists($username)) {
 
-				if ($userObj->registerUser($username, $email, $password, $contact_number)) {
+				if ($userObj->registerUser($username, $email, $password, $contact_number, 1, 'client')) {
 					header("Location: ../login.php");
 				}
 
@@ -50,7 +50,7 @@ if (isset($_POST['loginUserBtn'])) {
 
 	if (!empty($email) && !empty($password)) {
 
-		if ($userObj->loginUser($email, $password)) {
+		if ($userObj->loginUser($email, $password, 'client')) {
 			header("Location: ../index.php");
 		}
 		else {
@@ -70,7 +70,7 @@ if (isset($_POST['loginUserBtn'])) {
 
 if (isset($_GET['logoutUserBtn'])) {
 	$userObj->logout();
-	header("Location: ../index.php");
+	header("Location: ../../index.php");
 }
 
 if (isset($_POST['updateUserBtn'])) {
@@ -108,4 +108,3 @@ if (isset($_POST['deleteOfferBtn'])) {
 		header("Location: ../index.php");
 	}
 }
-
